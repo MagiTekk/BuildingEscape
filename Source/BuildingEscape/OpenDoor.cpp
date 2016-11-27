@@ -19,8 +19,11 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+	
+}
 
-	// ...
+void UOpenDoor::OpenDoor()
+{
 	AActor* Owner = GetOwner();
 	FQuat Rotation = Owner->GetTransform().GetRotation();
 	FRotator NewRotation = FRotator(0.f, 60.f, 0.f);
@@ -28,7 +31,6 @@ void UOpenDoor::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("rotation before change is %s"), *Owner->GetTransform().GetRotation().ToString());
 	Owner->SetActorRotation(NewRotation);
 	UE_LOG(LogTemp, Warning, TEXT("new rotation is %s"), *Owner->GetTransform().GetRotation().ToString());
-	
 }
 
 
@@ -37,6 +39,10 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// ...
+	// Poll the Trigger Volume
+	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+	{
+		OpenDoor();
+	}
 }
 
