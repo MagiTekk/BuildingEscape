@@ -4,6 +4,8 @@
 #include "OpenDoor.h"
 
 
+//UE_LOG(LogTemp, Warning, TEXT("new rotation is %s"), *Owner->GetTransform().GetRotation().ToString());
+
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
 {
@@ -19,18 +21,20 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+	Owner = GetOwner();
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 void UOpenDoor::OpenDoor()
 {
-	AActor* Owner = GetOwner();
-	FQuat Rotation = Owner->GetTransform().GetRotation();
-	FRotator NewRotation = FRotator(0.f, 60.f, 0.f);
+	isDoorOpen = true;
+	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+}
 
-	UE_LOG(LogTemp, Warning, TEXT("rotation before change is %s"), *Owner->GetTransform().GetRotation().ToString());
-	Owner->SetActorRotation(NewRotation);
-	UE_LOG(LogTemp, Warning, TEXT("new rotation is %s"), *Owner->GetTransform().GetRotation().ToString());
+void UOpenDoor::CloseDoor()
+{
+	isDoorOpen = false;
+	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
 
 
@@ -42,7 +46,17 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	// Poll the Trigger Volume
 	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
 	{
-		OpenDoor();
+		if (!isDoorOpen)
+		{
+			OpenDoor();
+		}		
+		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+	}
+
+	// Check if it's time to cose the door
+	if (isDoorOpen && GetWorld()->GetTimeSeconds() - LastDoorOpenTime >= DoorCloseDelay)
+	{
+		CloseDoor();
 	}
 }
 
