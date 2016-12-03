@@ -3,7 +3,8 @@
 ###############################
 
 # Only for this project
-Content/StarterContent/
+Content/StarterContent/Textures
+Content/StarterContent/HDRI
 
 # Compiled Object files
 *.slo
