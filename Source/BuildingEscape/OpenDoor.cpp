@@ -44,7 +44,7 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	// Poll the Trigger Volume
-	if (GetTotalMassOfActorsOnPlate() > 50.f) // TODO make into a parameter
+	if (GetTotalMassOfActorsOnPlate() > 30.f) // TODO make into a parameter
 	{
 		if (!isDoorOpen)
 		{
@@ -69,27 +69,18 @@ const float UOpenDoor::GetTotalMassOfActorsOnPlate()
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 
 	// Iterate through them adding their masses
-	for (AActor* Actor : OverlappingActors)
+	for (const auto& Actor : OverlappingActors)
 	{
-		// TODO in next video
-		UStaticMeshComponent* StaticMesh = Actor->FindComponentByClass<UStaticMeshComponent>();
-		if (StaticMesh)
-		{
-			TotalMass += StaticMesh->GetMass();
-		}
-
-		/*
-		TArray<UPrimitiveComponent*> comps;
+		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+		
+		//another solution getting all prmitive components...
+		/*TArray<UPrimitiveComponent*> comps;
 		Actor->GetComponents(OUT comps);
 
-		for (UPrimitiveComponent* comp: comps)
+		for (const auto& PrimitiveComponent : comps)
 		{
-			if (comp)
-			{
-				TotalMass += comp->GetMass();
-			}
-		}
-		*/
+			TotalMass += PrimitiveComponent->GetMass();
+		}*/
 	}
 
 	return TotalMass;

@@ -79,7 +79,7 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 		
 }
 
-const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
+FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
 {
 	/// Setup query parameters
 	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
@@ -92,7 +92,7 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 	return HitResult;
 }
 
-const FVector UGrabber::GetLineTraceStart()
+FVector UGrabber::GetLineTraceStart() const
 {
 	/*UE_LOG(LogTemp, Warning, TEXT("location: %s :: rotation: %s"), *PlayerViewPointLocation.ToString(), *PlayerViewPointRotation.ToString());*/
 	FVector PlayerViewPointLocation;
@@ -101,7 +101,7 @@ const FVector UGrabber::GetLineTraceStart()
 	return PlayerViewPointLocation;
 }
 
-const FVector UGrabber::GetLineTraceEnd()
+FVector UGrabber::GetLineTraceEnd() const
 {
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
