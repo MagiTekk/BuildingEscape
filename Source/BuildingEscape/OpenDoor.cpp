@@ -23,21 +23,19 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	if (!PressurePlate) { UE_LOG(LogTemp, Error, TEXT("%s PressurePlate is not assigned!"), *GetOwner()->GetName()); return; }
-	if (!Owner) { return; }
 	Owner = GetOwner();
 }
 
 void UOpenDoor::OpenDoor()
 {
 	isDoorOpen = true;
-	if (!Owner) { return; }
-	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+	//Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+	OnOpenRequest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
 {
 	isDoorOpen = false;
-	if (!Owner) { return; }
 	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
 
